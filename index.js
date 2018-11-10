@@ -54,7 +54,7 @@ class UploadProvider {
   }
 
   storeFile(req, res, callback) {
-    debug('Saving File', req, res);
+    debug('Saving File');
     return this.uploadImageHandler(req, res, callback);
   }
 }
