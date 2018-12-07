@@ -5,10 +5,12 @@ const multer = require('multer');
 
 class UploadProvider {
   constructor(config = {}) {
+    debug('Contructing...');
     this.config = {
       uploads_dir: '',
       ...config,
     };
+    debug('Uploads Directory:', this.config.uploads_dir);
 
     try {
       fs.mkdirSync(this.config.uploads_dir);
@@ -33,6 +35,7 @@ class UploadProvider {
   }
 
   deleteFile(fileName) {
+    debug('Deleting File:', fileName);
     const filePath = path.join(this.config.uploads_dir, fileName);
     try {
       fs.unlinkSync(filePath);
@@ -42,6 +45,7 @@ class UploadProvider {
   }
 
   readFile(fileName) {
+    debug('Reading File:', fileName);
     const filePath = path.join(this.config.uploads_dir, fileName);
     let fileContent = null;
     try {
