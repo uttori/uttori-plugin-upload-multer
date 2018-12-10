@@ -3,20 +3,28 @@ const test = require('ava');
 const sinon = require('sinon');
 const UploadProvider = require('../index');
 
-test('Upload Provider: constructor(config): does not error', (t) => {
-  t.notThrows(() => new UploadProvider());
+const config = {
+  uploads_dir: 'test',
+};
+
+test('constructor(config): does not error', (t) => {
+  t.notThrows(() => new UploadProvider(config));
 });
 
-test('Upload Provider: readFile(filePath): returns null when unable to read file', (t) => {
+test('constructor(config): throws an error when missing config upload directory', (t) => {
+  t.throws(() => new UploadProvider());
+});
+
+test('readFile(filePath): returns null when unable to read file', (t) => {
   // const stub = sinon.stub(fs, 'readFileSync'); // BUG: https://github.com/avajs/ava/issues/1359
-  const s = new UploadProvider();
+  const s = new UploadProvider(config);
   const result = s.readFile('missing.json');
   t.is(result, null);
 });
 
-test('Upload Provider: deleteFile(filePath): removes the file from disk', (t) => {
+test('deleteFile(filePath): removes the file from disk', (t) => {
   const spy = sinon.spy(fs, 'unlinkSync'); // BUG: https://github.com/avajs/ava/issues/1359
-  const s = new UploadProvider({ uploads_dir: 'test' });
+  const s = new UploadProvider(config);
 
   s.deleteFile('example-upload.pdf');
 
@@ -26,13 +34,13 @@ test('Upload Provider: deleteFile(filePath): removes the file from disk', (t) =>
   fs.unlinkSync.restore();
 });
 
-test('Upload Provider: all(): returns all the files', (t) => {
+test('all(): returns all the files', (t) => {
   const stub = sinon.stub(fs, 'readdirSync'); // BUG: https://github.com/avajs/ava/issues/1359
   stub.returns([
     '.DS_Store',
     'example-upload.pdf',
   ]);
-  const s = new UploadProvider({ uploads_dir: 'test' });
+  const s = new UploadProvider(config);
   const results = s.all();
 
   t.true(stub.calledOnce);
@@ -42,8 +50,8 @@ test('Upload Provider: all(): returns all the files', (t) => {
   fs.readdirSync.restore();
 });
 
-test('Upload Provider: storeFile(req, res, callback): calls uploadImageHandler', (t) => {
-  const s = new UploadProvider();
+test('storeFile(req, res, callback): calls uploadImageHandler', (t) => {
+  const s = new UploadProvider(config);
   const spy = sinon.spy();
   s.uploadImageHandler = spy;
   s.storeFile(1, 2, 3);

@@ -10,6 +10,10 @@ class UploadProvider {
       uploads_dir: '',
       ...config,
     };
+    if (!this.config.uploads_dir) {
+      debug('No uploads directory provided.');
+      throw new Error('No uploads directory provided.');
+    }
     debug('Uploads Directory:', this.config.uploads_dir);
 
     try {
