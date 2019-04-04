@@ -1,7 +1,7 @@
 const fs = require('fs');
 const test = require('ava');
 const sinon = require('sinon');
-const UploadProvider = require('../index');
+const UploadProvider = require('..');
 
 const config = {
   uploads_dir: 'test',
