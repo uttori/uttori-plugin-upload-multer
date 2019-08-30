@@ -27,7 +27,12 @@
     "eslint-plugin-jsx-a11y": "^6.2.3",
     "eslint-plugin-no-inferred-method-name": "^1.0.2",
     "eslint-plugin-node": "^9.2.0",
+    "eslint-plugin-optimize-regex": "^1.1.6",
+    "eslint-plugin-ramda": "^2.5.1",
     "eslint-plugin-react": "^7.14.3",
+    "eslint-plugin-react-hooks": "^2.0.1",
+    "eslint-plugin-security": "^1.4.0",
+    "eslint-plugin-unicorn": "^10.0.0",
     "eslint-plugin-xss": "^0.1.9",
     "nyc": "^14.1.1",
     "sinon": "^7.4.1",
@@ -36,7 +41,7 @@
   "files": [
     "index.js"
   ],
-  "main": "uttori-upload-provider-multer",
+  "main": "./index.js",
   "nyc": {
     "cache": true,
     "all": true,
