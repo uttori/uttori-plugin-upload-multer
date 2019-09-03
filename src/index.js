@@ -7,27 +7,27 @@ class UploadProvider {
   constructor(config = {}) {
     debug('Contructing...');
     this.config = {
-      uploads_dir: '',
+      directory: '',
       ...config,
     };
-    if (!this.config.uploads_dir) {
+    if (!this.config.directory) {
       debug('No uploads directory provided.');
       throw new Error('No uploads directory provided.');
     }
-    debug('Uploads Directory:', this.config.uploads_dir);
+    debug('Uploads Directory:', this.config.directory);
 
     try {
-      fs.mkdirSync(this.config.uploads_dir);
-    } catch (e) {}
+      fs.mkdirSync(this.config.directory);
+    } catch (error) {}
 
     /* istanbul ignore next */
     const storage = multer.diskStorage({
-      destination: (req, file, cb) => {
-        cb(null, this.config.uploads_dir);
+      destination: (request, file, callback) => {
+        callback(null, this.config.directory);
       },
-      filename(req, file, cb) {
+      filename(request, file, callback) {
         const filename = `${file.originalname.substr(0, file.originalname.lastIndexOf('.'))}-${Date.now()}${file.originalname.substr(file.originalname.lastIndexOf('.'))}`;
-        cb(null, filename);
+        callback(null, filename);
       },
     });
 
@@ -35,35 +35,35 @@ class UploadProvider {
   }
 
   all() {
-    return fs.readdirSync(this.config.uploads_dir);
+    return fs.readdirSync(this.config.directory);
   }
 
   deleteFile(fileName) {
     debug('Deleting File:', fileName);
-    const filePath = path.join(this.config.uploads_dir, fileName);
+    const filePath = path.join(this.config.directory, fileName);
     try {
       fs.unlinkSync(filePath);
-    } catch (e) {
-      debug('Error Deleting File:', fileName, e);
+    } catch (error) {
+      debug('Error Deleting File:', fileName, error);
     }
   }
 
   readFile(fileName) {
     debug('Reading File:', fileName);
-    const filePath = path.join(this.config.uploads_dir, fileName);
+    const filePath = path.join(this.config.directory, fileName);
     let fileContent = null;
     try {
       fileContent = fs.readFileSync(filePath, 'utf8');
-    } catch (e) {
-      debug('Error Readomg File:', fileName, e);
+    } catch (error) {
+      debug('Error Readomg File:', fileName, error);
     }
 
     return fileContent;
   }
 
-  storeFile(req, res, callback) {
+  storeFile(request, response, callback) {
     debug('Saving File');
-    return this.uploadImageHandler(req, res, callback);
+    return this.uploadImageHandler(request, response, callback);
   }
 }
 

@@ -1,10 +1,10 @@
 const fs = require('fs');
 const test = require('ava');
 const sinon = require('sinon');
-const UploadProvider = require('..');
+const UploadProvider = require('../src');
 
 const config = {
-  uploads_dir: 'test',
+  directory: 'test',
 };
 
 test('constructor(config): does not error', (t) => {

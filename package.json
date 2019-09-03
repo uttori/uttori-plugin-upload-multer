@@ -20,7 +20,7 @@
   },
   "devDependencies": {
     "ava": "^2.3.0",
-    "eslint": "^5",
+    "eslint": "^6.3.0",
     "eslint-config-airbnb": "^18.0.1",
     "eslint-plugin-ava": "^8.0.0",
     "eslint-plugin-import": "^2.18.2",
@@ -35,19 +35,19 @@
     "eslint-plugin-unicorn": "^10.0.0",
     "eslint-plugin-xss": "^0.1.9",
     "nyc": "^14.1.1",
-    "sinon": "^7.4.1",
+    "sinon": "^7.4.2",
     "supertest": "^4.0.2"
   },
   "files": [
-    "index.js"
+    "src/index.js"
   ],
-  "main": "./index.js",
+  "main": "src/index.js",
   "nyc": {
     "cache": true,
     "all": true,
     "check-coverage": false,
     "include": [
-      "index.js"
+      "src/index.js"
     ],
     "exclude": []
   },
