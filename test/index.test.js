@@ -1,7 +1,6 @@
 const test = require('ava');
 const sinon = require('sinon');
 const request = require('supertest');
-const { FileUtility } = require('uttori-utilities');
 const MulterUpload = require('../src');
 
 test('MulterUpload.register(context): can register', (t) => {
