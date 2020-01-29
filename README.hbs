@@ -1,0 +1,58 @@
+[![view on npm](http://img.shields.io/npm/v/uttori-plugin-upload-multer.svg)](https://www.npmjs.org/package/uttori-plugin-upload-multer)
+[![npm module downloads](http://img.shields.io/npm/dt/uttori-plugin-upload-multer.svg)](https://www.npmjs.org/package/uttori-plugin-upload-multer)
+[![Build Status](https://travis-ci.org/uttori/uttori-plugin-upload-multer.svg?branch=master)](https://travis-ci.org/uttori/uttori-plugin-upload-multer)
+[![Dependency Status](https://david-dm.org/uttori/uttori-plugin-upload-multer.svg)](https://david-dm.org/uttori/uttori-plugin-upload-multer)
+[![Coverage Status](https://coveralls.io/repos/uttori/uttori-plugin-upload-multer/badge.svg?branch=master)](https://coveralls.io/r/uttori/uttori-plugin-upload-multer?branch=master)
+
+# Uttori Plugin - Multer Upload
+
+A plugin to add file uploading using Multer.
+
+## Install
+
+```bash
+npm install --save uttori-plugin-upload-multer
+```
+
+## Config
+
+```js
+{
+  // Registration Events
+  events: {
+    bindRoutes: ['bind-routes'],
+  },
+
+  // Directory files will be uploaded to.
+  directory: 'uploads',
+
+  // Server route to POST uploads to.
+  route: '/upload',
+}
+```
+
+* * *
+
+## API Reference
+
+{{>main}}
+
+* * *
+
+## Tests
+
+To run the test suite, first install the dependencies, then run `npm test`:
+
+```bash
+npm install
+npm test
+DEBUG=Uttori* npm test
+```
+
+## Contributors
+
+* [Matthew Callis](https://github.com/MatthewCallis)
+
+## License
+
+* [MIT](LICENSE)
