@@ -11,7 +11,7 @@ declare class MulterUpload {
      * <caption>MulterUpload.configKey</caption>
      * const config = { ...MulterUpload.defaultConfig(), ...context.config[MulterUpload.configKey] };
      */
-    static configKey: any;
+    static configKey: string;
     /**
      * The default configuration.
      * @example

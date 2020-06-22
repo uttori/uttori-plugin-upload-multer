@@ -14,6 +14,7 @@ class MulterUpload {
   /**
    * The configuration key for plugin to look for in the provided configuration.
    *
+   * @type {string}
    * @returns {string} The configuration key.
    * @example <caption>MulterUpload.configKey</caption>
    * const config = { ...MulterUpload.defaultConfig(), ...context.config[MulterUpload.configKey] };
