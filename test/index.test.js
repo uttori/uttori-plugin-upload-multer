@@ -1,3 +1,4 @@
+// @ts-nocheck
 const test = require('ava');
 const sinon = require('sinon');
 const request = require('supertest');
@@ -19,6 +20,24 @@ test('MulterUpload.register(context): errors without events', (t) => {
   t.throws(() => {
     MulterUpload.register({ hooks: { on: () => {} }, config: { [MulterUpload.configKey]: { } } });
   }, { message: 'Missing events to listen to for in \'config.events\'.' });
+});
+
+test('Plugin.register(context): does not error with events corresponding to missing methods', (t) => {
+  t.notThrows(() => {
+    MulterUpload.register({
+      hooks: {
+        on: () => {},
+      },
+      config: {
+        [MulterUpload.configKey]: {
+          events: {
+            test: ['test'],
+            bindRoutes: ['bind-routes'],
+          },
+        },
+      },
+    });
+  });
 });
 
 test('MulterUpload.defaultConfig(): can return a default config', (t) => {
@@ -52,12 +71,24 @@ test('MulterUpload.validateConfig(config, _context): throws when route is not a 
   }, { message: 'Config Error: `route` should be a string server route to where files should be POSTed to.' });
 });
 
+test('MulterUpload.validateConfig(config, _context): throws when publicRoute is not a string', (t) => {
+  t.throws(() => {
+    MulterUpload.validateConfig({
+      [MulterUpload.configKey]: {
+        directory: 'uploads',
+        route: '/upload',
+      },
+    });
+  }, { message: 'Config Error: `publicRoute` should be a string server route to where files should be GET from.' });
+});
+
 test('MulterUpload.validateConfig(config, _context): can validate', (t) => {
   t.notThrows(() => {
     MulterUpload.validateConfig({
       [MulterUpload.configKey]: {
         directory: 'uploads',
         route: '/upload',
+        publicRoute: '/uploads',
       },
     });
   });

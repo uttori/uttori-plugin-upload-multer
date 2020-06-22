@@ -1,10 +1,11 @@
 const express = require('express');
-const debug = require('debug')('Uttori.PLugin.MulterUpload');
+const debug = require('debug')('Uttori.Plugin.MulterUpload');
 const { FileUtility } = require('uttori-utilities');
 const multer = require('multer');
 
 /**
  * Uttori Multer Upload
+ *
  * @example <caption>MulterUpload</caption>
  * const content = MulterUpload.storeFile(request);
  * @class
@@ -12,7 +13,8 @@ const multer = require('multer');
 class MulterUpload {
   /**
    * The configuration key for plugin to look for in the provided configuration.
-   * @return {String} The configuration key.
+   *
+   * @returns {string} The configuration key.
    * @example <caption>MulterUpload.configKey</caption>
    * const config = { ...MulterUpload.defaultConfig(), ...context.config[MulterUpload.configKey] };
    * @static
@@ -23,7 +25,8 @@ class MulterUpload {
 
   /**
    * The default configuration.
-   * @return {Object} The configuration.
+   *
+   * @returns {object} The configuration.
    * @example <caption>MulterUpload.defaultConfig()</caption>
    * const config = { ...MulterUpload.defaultConfig(), ...context.config[MulterUpload.configKey] };
    * @static
@@ -35,13 +38,18 @@ class MulterUpload {
 
       // Server route to POST uploads to.
       route: '/upload',
+
+      // Server route to GET uploads from.
+      publicRoute: '/uploads',
     };
   }
 
   /**
    * Validates the provided configuration for required entries.
-   * @param {Object} config - A configuration object.
-   * @param {Object} config[MulterUpload.configKey] - A configuration object specifically for this plugin.
+   *
+   * @param {object} config - A configuration object.
+   * @param {object} config.configKey - A configuration object specifically for this plugin.
+   * @param {object} _context - Unused.
    * @example <caption>MulterUpload.validateConfig(config, _context)</caption>
    * MulterUpload.validateConfig({ ... });
    * @static
@@ -63,16 +71,22 @@ class MulterUpload {
       debug(error);
       throw new Error(error);
     }
+    if (typeof config[MulterUpload.configKey].publicRoute !== 'string') {
+      const error = 'Config Error: `publicRoute` should be a string server route to where files should be GET from.';
+      debug(error);
+      throw new Error(error);
+    }
     debug('Validated config.');
   }
 
   /**
    * Register the plugin with a provided set of events on a provided Hook system.
-   * @param {Object} context - A Uttori-like context.
-   * @param {Object} context.hooks - An event system / hook system to use.
+   *
+   * @param {object} context - A Uttori-like context.
+   * @param {object} context.hooks - An event system / hook system to use.
    * @param {Function} context.hooks.on - An event registration function.
-   * @param {Object} context.config - A provided configuration to use.
-   * @param {Object} context.config.events - An object whose keys correspong to methods, and contents are events to listen for.
+   * @param {object} context.config - A provided configuration to use.
+   * @param {object} context.config.events - An object whose keys correspong to methods, and contents are events to listen for.
    * @example <caption>MulterUpload.register(context)</caption>
    * const context = {
    *   hooks: {
@@ -100,19 +114,26 @@ class MulterUpload {
       throw new Error("Missing events to listen to for in 'config.events'.");
     }
     Object.keys(config.events).forEach((method) => {
-      config.events[method].forEach((event) => context.hooks.on(event, MulterUpload[method]));
+      config.events[method].forEach((event) => {
+        if (typeof MulterUpload[method] !== 'function') {
+          debug(`Missing function "${method}" for key "${event}"`);
+          return;
+        }
+        context.hooks.on(event, MulterUpload[method]);
+      });
     });
   }
 
   /**
    * Add the upload route to the server object.
-   * @param {Object} server - An Express server instance.
+   *
+   * @param {object} server - An Express server instance.
    * @param {Function} server.post - Function to register route.
    * @param {Function} server.use - Function to register middleware.
-   * @param {Object} context - A Uttori-like context.
-   * @param {Object} context.config - A provided configuration to use.
-   * @param {String} context.config.directory - The file path to save files into.
-   * @param {String} context.config.route - The URL to POST files to.
+   * @param {object} context - A Uttori-like context.
+   * @param {object} context.config - A provided configuration to use.
+   * @param {string} context.config.directory - The file path to save files into.
+   * @param {string} context.config.route - The URL to POST files to.
    * @example <caption>MulterUpload.bindRoutes(server, context)</caption>
    * const context = {
    *   config: {
@@ -127,19 +148,22 @@ class MulterUpload {
    */
   static bindRoutes(server, context) {
     debug('bindRoutes');
-    const { directory, route } = { ...MulterUpload.defaultConfig(), ...context.config[MulterUpload.configKey] };
-    server.use(route, express.static(directory));
+    const { directory, route, publicRoute } = { ...MulterUpload.defaultConfig(), ...context.config[MulterUpload.configKey] };
+    debug('bindRoutes route:', route);
+    debug('bindRoutes directory:', directory);
+    server.use(publicRoute, express.static(directory));
     server.post(route, MulterUpload.upload(context));
   }
 
   /**
    * The Express route method to process the upload request and provide a response.
-   * @param {Object} request - An Express request object.
-   * @param {Object} request.file - The uploaded file.
-   * @param {String} request.file.filename - The uploaded file's filename.
-   * @param {Object} response - An Express response object.
-   * @param {Object} next - An Express next function.
-   * @example <caption>MulterUpload.upload(request, response, _next)</caption>
+   *
+   * @param {object} context - A Uttori-like context.
+   * @param {object} context.config - A provided configuration to use.
+   * @param {string} context.config.directory - The file path to save files into.
+   * @param {string} context.config.route - The URL to POST files to.
+   * @returns {Function} - The function to pass to Express.
+   * @example <caption>MulterUpload.upload(context)(request, response, _next)</caption>
    * server.post('/upload', MulterUpload.upload);
    * @static
    */
