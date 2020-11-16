@@ -1,5 +1,5 @@
-[![view on npm](http://img.shields.io/npm/v/uttori-plugin-upload-multer.svg)](https://www.npmjs.org/package/uttori-plugin-upload-multer)
-[![npm module downloads](http://img.shields.io/npm/dt/uttori-plugin-upload-multer.svg)](https://www.npmjs.org/package/uttori-plugin-upload-multer)
+[![view on npm](https://img.shields.io/npm/v/uttori-plugin-upload-multer.svg)](https://www.npmjs.org/package/uttori-plugin-upload-multer)
+[![npm module downloads](https://img.shields.io/npm/dt/uttori-plugin-upload-multer.svg)](https://www.npmjs.org/package/uttori-plugin-upload-multer)
 [![Build Status](https://travis-ci.org/uttori/uttori-plugin-upload-multer.svg?branch=master)](https://travis-ci.org/uttori/uttori-plugin-upload-multer)
 [![Dependency Status](https://david-dm.org/uttori/uttori-plugin-upload-multer.svg)](https://david-dm.org/uttori/uttori-plugin-upload-multer)
 [![Coverage Status](https://coveralls.io/repos/uttori/uttori-plugin-upload-multer/badge.svg?branch=master)](https://coveralls.io/r/uttori/uttori-plugin-upload-multer?branch=master)
