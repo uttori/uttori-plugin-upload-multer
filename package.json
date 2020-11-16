@@ -1,6 +1,6 @@
 {
   "name": "@uttori/plugin-upload-multer",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "Uttori upload provider using Multer.",
   "author": "Matthew Callis <matthew.callis@gmail.com>",
   "contributors": [],
