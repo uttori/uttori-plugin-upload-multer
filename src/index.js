@@ -1,7 +1,7 @@
 const express = require('express');
 const debug = require('debug')('Uttori.Plugin.MulterUpload');
-const { FileUtility } = require('uttori-utilities');
 const multer = require('multer');
+const fs = require('fs');
 
 /**
  * Uttori Multer Upload
@@ -176,7 +176,10 @@ class MulterUpload {
       // Ensure the directory exists.
       /* istanbul ignore next */
       try {
-        FileUtility.ensureDirectorySync(config.directory);
+        if (!fs.existsSync(config.directory)) {
+          debug('Directory missing, creating:', config.director);
+          fs.mkdirSync(config.directory, { recursive: true });
+        }
       } catch (error) {
         debug('Error creating directory:', error);
       }

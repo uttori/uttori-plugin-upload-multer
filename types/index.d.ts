@@ -1,3 +1,5 @@
+declare module '@uttori/plugin-upload-multer';
+
 declare module "index" {
     export = MulterUpload;
     class MulterUpload {

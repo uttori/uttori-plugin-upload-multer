@@ -112,7 +112,7 @@ test('MulterUpload.bindRoutes(server, context): can bind routes', (t) => {
 
 test('MulterUpload.upload(context): returns a Express route and can upload files and returns the filename', async (t) => {
   t.plan(2);
-  const { serverSetup } = require('./_helpers/server.js');
+  const { serverSetup } = require('./_helpers/server');
   const route = '/upload';
   const context = {
     config: {
