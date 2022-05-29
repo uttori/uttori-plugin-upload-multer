@@ -29,8 +29,6 @@
   },
   "devDependencies": {
     "ava": "^4.2.0",
-    "coveralls": "^3.1.1",
-    "docsify-cli": "^4.4.4",
     "eslint": "^8.16.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-plugin-anti-trojan-source": "^1.1.0",
@@ -38,7 +36,6 @@
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-jsdoc": "^39.3.2",
     "eslint-plugin-jsx-a11y": "^6.5.1",
-    "eslint-plugin-no-inferred-method-name": "^2.0.0",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-optimize-regex": "^1.2.1",
     "eslint-plugin-ramda": "^2.5.1",
@@ -62,6 +59,14 @@
   "main": "src/index.js",
   "types": "types/index.d.ts",
   "typings": "types/index.d.ts",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./types/index.d.ts",
+      "require": "./src/index.js",
+      "import": "./esm/index.js"
+    }
+  },
   "ava": {
     "files": [
       "test/**/*.test.js"
@@ -82,6 +87,11 @@
       "src/**/*.js"
     ],
     "exclude": []
+  },
+  "release-it": {
+    "github": {
+      "release": true
+    }
   },
   "scripts": {
     "docs": "jsdoc2md --private --example-lang js --template rm.hbs src/index.js > README.md; jsdoc2md --private --example-lang js src/index.js > docs/upload-multer.md",

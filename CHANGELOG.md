@@ -2,8 +2,11 @@
 
 All notable changes to this project will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [2.0.3](https://github.com/uttori/uttori-plugin-upload-multer/compare/v2.0.3...v2.0.4) - 2022-05-29
+## [2.1.1](https://github.com/uttori/uttori-plugin-upload-multer/compare/v2.0.3...v2.1.1) - 2022-05-29
 
+- 🥴 Versions got out of sync
+- 🧰 Add ESM Support
+- 🧰 Add explicit exports
 - 🎁 Update dev dependencies
 - 🎁 Update README badge URLs
 - 🧰 Created how directories are verified.
