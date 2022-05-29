@@ -49,6 +49,7 @@
         "peerDependencies": true
       }
     ],
+    "import/no-unresolved": 0,
     "max-len": 0,
     "no-empty": ["error", { "allowEmptyCatch": true }],
     "no-param-reassign": 0,
@@ -71,6 +72,7 @@
     "no-underscore-dangle": 0,
     "no-unused-vars": ["error", { "varsIgnorePattern": "^_", "argsIgnorePattern": "^_", "caughtErrors": "none" }],
     "node/no-unpublished-require": 0,
+    "node/no-missing-require": 0,
     "object-curly-newline": 0,
     "optimize-regex/optimize-regex": "warn",
     "security/detect-non-literal-fs-filename": 0,
