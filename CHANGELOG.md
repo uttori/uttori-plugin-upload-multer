@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2.2.0](https://github.com/uttori/uttori-plugin-upload-multer/compare/v2.2.0...v2.2.1) - 2023-04-04
+
+- 🎁 Update dev dependencies
+
 ## [2.2.0](https://github.com/uttori/uttori-plugin-upload-multer/compare/v2.1.1...v2.2.0) - 2022-06-29
 
 - 🎁 Update `multer` to `1.4.5-lts.1`
