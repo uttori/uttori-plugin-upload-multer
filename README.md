@@ -1,12 +1,9 @@
 [![view on npm](https://img.shields.io/npm/v/@uttori/plugin-upload-multer.svg)](https://www.npmjs.com/package/@uttori/plugin-upload-multer)
 [![npm module downloads](https://img.shields.io/npm/dt/@uttori/plugin-upload-multer.svg)](https://www.npmjs.com/package/@uttori/plugin-upload-multer)
 [![Build Status](https://travis-ci.com/uttori/uttori-plugin-upload-multer.svg?branch=master)](https://travis-ci.com/uttori/uttori-plugin-upload-multer)
-[![Dependency Status](https://david-dm.org/uttori/uttori-plugin-upload-multer.svg)](https://david-dm.org/uttori/uttori-plugin-upload-multer)
 [![Coverage Status](https://coveralls.io/repos/github/uttori/uttori-plugin-upload-multer/badge.svg?branch=master)](https://coveralls.io/github/uttori/uttori-plugin-upload-multer?branch=master)
-[![Tree-Shaking Support](https://badgen.net/bundlephobia/tree-shaking/@uttori/plugin-upload-multer)](https://bundlephobia.com/result?p=@uttori/plugin-upload-multer)
-[![Dependency Count](https://badgen.net/bundlephobia/dependency-count/@uttori/plugin-upload-multer)](https://bundlephobia.com/result?p=@uttori/plugin-upload-multer)
-[![Minified + GZip](https://badgen.net/bundlephobia/minzip/@uttori/plugin-upload-multer)](https://bundlephobia.com/result?p=@uttori/plugin-upload-multer)
-[![Minified](https://badgen.net/bundlephobia/min/@uttori/plugin-upload-multer)](https://bundlephobia.com/result?p=@uttori/plugin-upload-multer)
+![dependency status](https://img.shields.io/librariesio/release/npm/@uttori/plugin-upload-multer)
+![npm bundle size](https://img.shields.io/bundlephobia/minzip/@uttori/plugin-upload-multer?label=Minified%20%2B%20GZip)
 
 # Uttori Plugin - Multer Upload
 
