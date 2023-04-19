@@ -1,3 +1,18 @@
+## Classes
+
+<dl>
+<dt><a href="#MulterUpload">MulterUpload</a></dt>
+<dd><p>Uttori Multer Upload</p>
+</dd>
+</dl>
+
+## Typedefs
+
+<dl>
+<dt><a href="#MulterUploadConfig">MulterUploadConfig</a> : <code>object</code></dt>
+<dd></dd>
+</dl>
+
 <a name="MulterUpload"></a>
 
 ## MulterUpload
@@ -7,11 +22,11 @@ Uttori Multer Upload
 
 * [MulterUpload](#MulterUpload)
     * [.configKey](#MulterUpload.configKey) ⇒ <code>string</code>
-    * [.defaultConfig()](#MulterUpload.defaultConfig) ⇒ <code>object</code>
+    * [.defaultConfig()](#MulterUpload.defaultConfig) ⇒ [<code>MulterUploadConfig</code>](#MulterUploadConfig)
     * [.validateConfig(config, _context)](#MulterUpload.validateConfig)
     * [.register(context)](#MulterUpload.register)
     * [.bindRoutes(server, context)](#MulterUpload.bindRoutes)
-    * [.upload(context)](#MulterUpload.upload) ⇒ <code>function</code>
+    * [.upload(context)](#MulterUpload.upload) ⇒ <code>RequestHandler</code>
 
 <a name="MulterUpload.configKey"></a>
 
@@ -26,11 +41,11 @@ const config = { ...MulterUpload.defaultConfig(), ...context.config[MulterUpload
 ```
 <a name="MulterUpload.defaultConfig"></a>
 
-### MulterUpload.defaultConfig() ⇒ <code>object</code>
+### MulterUpload.defaultConfig() ⇒ [<code>MulterUploadConfig</code>](#MulterUploadConfig)
 The default configuration.
 
 **Kind**: static method of [<code>MulterUpload</code>](#MulterUpload)  
-**Returns**: <code>object</code> - The configuration.  
+**Returns**: [<code>MulterUploadConfig</code>](#MulterUploadConfig) - The configuration.  
 **Example** *(MulterUpload.defaultConfig())*  
 ```js
 const config = { ...MulterUpload.defaultConfig(), ...context.config[MulterUpload.configKey] };
@@ -45,7 +60,6 @@ Validates the provided configuration for required entries.
 | Param | Type | Description |
 | --- | --- | --- |
 | config | <code>object</code> | A configuration object. |
-| config.configKey | <code>object</code> | A configuration object specifically for this plugin. |
 | _context | <code>object</code> | Unused. |
 
 **Example** *(MulterUpload.validateConfig(config, _context))*  
@@ -98,8 +112,6 @@ Add the upload route to the server object.
 | server.use | <code>function</code> | Function to register middleware. |
 | context | <code>object</code> | A Uttori-like context. |
 | context.config | <code>object</code> | A provided configuration to use. |
-| context.config.directory | <code>string</code> | The file path to save files into. |
-| context.config.route | <code>string</code> | The URL to POST files to. |
 
 **Example** *(MulterUpload.bindRoutes(server, context))*  
 ```js
@@ -115,20 +127,32 @@ MulterUpload.bindRoutes(server, context);
 ```
 <a name="MulterUpload.upload"></a>
 
-### MulterUpload.upload(context) ⇒ <code>function</code>
+### MulterUpload.upload(context) ⇒ <code>RequestHandler</code>
 The Express route method to process the upload request and provide a response.
 
 **Kind**: static method of [<code>MulterUpload</code>](#MulterUpload)  
-**Returns**: <code>function</code> - - The function to pass to Express.  
+**Returns**: <code>RequestHandler</code> - The function to pass to Express.  
 
 | Param | Type | Description |
 | --- | --- | --- |
 | context | <code>object</code> | A Uttori-like context. |
 | context.config | <code>object</code> | A provided configuration to use. |
-| context.config.directory | <code>string</code> | The file path to save files into. |
-| context.config.route | <code>string</code> | The URL to POST files to. |
 
 **Example** *(MulterUpload.upload(context)(request, response, _next))*  
 ```js
 server.post('/upload', MulterUpload.upload);
 ```
+<a name="MulterUploadConfig"></a>
+
+## MulterUploadConfig : <code>object</code>
+**Kind**: global typedef  
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| [events] | <code>object</code> | Events to bind to. |
+| directory | <code>string</code> | Directory files will be uploaded to. |
+| route | <code>string</code> | Server route to POST uploads to. |
+| publicRoute | <code>string</code> | Server route to GET uploads from. |
+| middleware | <code>Array.&lt;RequestHandler&gt;</code> | Custom Middleware for the Upload route |
+

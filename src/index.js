@@ -1,11 +1,22 @@
 const express = require('express');
+const { RequestHandler } = require('express');
 const debug = require('debug')('Uttori.Plugin.MulterUpload');
 const multer = require('multer');
 const fs = require('fs');
+const path = require('path');
+
+/**
+ * @typedef MulterUploadConfig
+ * @type {object}
+ * @property {object} [events] Events to bind to.
+ * @property {string} directory Directory files will be uploaded to.
+ * @property {string} route Server route to POST uploads to.
+ * @property {string} publicRoute Server route to GET uploads from.
+ * @property {RequestHandler[]} middleware Custom Middleware for the Upload route
+ */
 
 /**
  * Uttori Multer Upload
- *
  * @example <caption>MulterUpload</caption>
  * const content = MulterUpload.storeFile(request);
  * @class
@@ -13,7 +24,6 @@ const fs = require('fs');
 class MulterUpload {
   /**
    * The configuration key for plugin to look for in the provided configuration.
-   *
    * @type {string}
    * @returns {string} The configuration key.
    * @example <caption>MulterUpload.configKey</caption>
@@ -26,8 +36,7 @@ class MulterUpload {
 
   /**
    * The default configuration.
-   *
-   * @returns {object} The configuration.
+   * @returns {MulterUploadConfig} The configuration.
    * @example <caption>MulterUpload.defaultConfig()</caption>
    * const config = { ...MulterUpload.defaultConfig(), ...context.config[MulterUpload.configKey] };
    * @static
@@ -50,10 +59,8 @@ class MulterUpload {
 
   /**
    * Validates the provided configuration for required entries.
-   *
-   * @param {object} config - A configuration object.
-   * @param {object} config.configKey - A configuration object specifically for this plugin.
-   * @param {object} _context - Unused.
+   * @param {object} config A configuration object.
+   * @param {object} _context Unused.
    * @example <caption>MulterUpload.validateConfig(config, _context)</caption>
    * MulterUpload.validateConfig({ ... });
    * @static
@@ -90,12 +97,11 @@ class MulterUpload {
 
   /**
    * Register the plugin with a provided set of events on a provided Hook system.
-   *
-   * @param {object} context - A Uttori-like context.
-   * @param {object} context.hooks - An event system / hook system to use.
-   * @param {Function} context.hooks.on - An event registration function.
-   * @param {object} context.config - A provided configuration to use.
-   * @param {object} context.config.events - An object whose keys correspong to methods, and contents are events to listen for.
+   * @param {object} context A Uttori-like context.
+   * @param {object} context.hooks An event system / hook system to use.
+   * @param {Function} context.hooks.on An event registration function.
+   * @param {object} context.config A provided configuration to use.
+   * @param {object} context.config.events An object whose keys correspong to methods, and contents are events to listen for.
    * @example <caption>MulterUpload.register(context)</caption>
    * const context = {
    *   hooks: {
@@ -118,6 +124,7 @@ class MulterUpload {
     if (!context || !context.hooks || typeof context.hooks.on !== 'function') {
       throw new Error("Missing event dispatcher in 'context.hooks.on(event, callback)' format.");
     }
+    /** @type {MulterUploadConfig} */
     const config = { ...MulterUpload.defaultConfig(), ...context.config[MulterUpload.configKey] };
     if (!config.events) {
       throw new Error("Missing events to listen to for in 'config.events'.");
@@ -135,14 +142,11 @@ class MulterUpload {
 
   /**
    * Add the upload route to the server object.
-   *
-   * @param {object} server - An Express server instance.
-   * @param {Function} server.post - Function to register route.
-   * @param {Function} server.use - Function to register middleware.
-   * @param {object} context - A Uttori-like context.
-   * @param {object} context.config - A provided configuration to use.
-   * @param {string} context.config.directory - The file path to save files into.
-   * @param {string} context.config.route - The URL to POST files to.
+   * @param {object} server An Express server instance.
+   * @param {Function} server.post Function to register route.
+   * @param {Function} server.use Function to register middleware.
+   * @param {object} context A Uttori-like context.
+   * @param {object} context.config A provided configuration to use.
    * @example <caption>MulterUpload.bindRoutes(server, context)</caption>
    * const context = {
    *   config: {
@@ -157,6 +161,7 @@ class MulterUpload {
    */
   static bindRoutes(server, context) {
     debug('bindRoutes');
+    /** @type {MulterUploadConfig} */
     const { directory, route, publicRoute, middleware } = { ...MulterUpload.defaultConfig(), ...context.config[MulterUpload.configKey] };
     debug('bindRoutes route:', route);
     debug('bindRoutes directory:', directory);
@@ -166,12 +171,9 @@ class MulterUpload {
 
   /**
    * The Express route method to process the upload request and provide a response.
-   *
-   * @param {object} context - A Uttori-like context.
-   * @param {object} context.config - A provided configuration to use.
-   * @param {string} context.config.directory - The file path to save files into.
-   * @param {string} context.config.route - The URL to POST files to.
-   * @returns {Function} - The function to pass to Express.
+   * @param {object} context A Uttori-like context.
+   * @param {object} context.config A provided configuration to use.
+   * @returns {RequestHandler} The function to pass to Express.
    * @example <caption>MulterUpload.upload(context)(request, response, _next)</caption>
    * server.post('/upload', MulterUpload.upload);
    * @static
@@ -179,13 +181,14 @@ class MulterUpload {
   static upload(context) {
     return (request, response, _next) => {
       debug('upload');
+      /** @type {MulterUploadConfig} */
       const config = { ...MulterUpload.defaultConfig(), ...context.config[MulterUpload.configKey] };
 
       // Ensure the directory exists.
       /* istanbul ignore next */
       try {
         if (!fs.existsSync(config.directory)) {
-          debug('Directory missing, creating:', config.director);
+          debug('Directory missing, creating:', config.directory);
           fs.mkdirSync(config.directory, { recursive: true });
         }
       } catch (error) {
@@ -193,13 +196,33 @@ class MulterUpload {
       }
 
       const storage = multer.diskStorage({
-        destination: (_request, _file, callback) => {
+        destination: (destinationRequest, _file, callback) => {
+          // Check for subdirectories ignoring any malicious or weird paths.
+          if (destinationRequest.body.fullPath && !destinationRequest.body.fullPath.includes('..') && !destinationRequest.body.fullPath.includes('\0')) {
+            try {
+              // Extract the subdirectory from the fullPath.
+              const subdirectory = path.dirname(destinationRequest.body.fullPath);
+              const fullPath = path.join(config.directory, subdirectory);
+              // Create the subdirectory if it doesn't exist.
+              /* istanbul ignore next */
+              if (!fs.existsSync(fullPath)) {
+                debug('Subdirectory missing, creating:', fullPath);
+                fs.mkdirSync(fullPath, { recursive: true });
+              }
+              callback(null, fullPath);
+              return;
+            } catch (error) {
+              /* istanbul ignore next */
+              debug('Error creating subdirectory:', error);
+            }
+          }
+
+          // No subdirectory, just the file.
           callback(null, config.directory);
         },
         filename(_request, file, callback) {
-          const name = file.originalname.slice(0, file.originalname.lastIndexOf('.'));
-          const extension = file.originalname.slice(file.originalname.lastIndexOf('.'));
-          const filename = `${name}-${Date.now()}${extension}`;
+          const { name, ext } = path.parse(file.originalname);
+          const filename = `${name}-${Date.now()}${ext}`;
           callback(null, filename);
         },
       });
@@ -208,7 +231,8 @@ class MulterUpload {
       const handler = multer({ storage }).single('file');
       handler(request, response, (error) => {
         let status = 200;
-        let send = request.file.filename;
+        // Respond with the relatize path to the file.
+        let send = request.file?.path.replace(config.directory, config.publicRoute);
         /* istanbul ignore next */
         if (error) {
           debug('Upload Error:', error);

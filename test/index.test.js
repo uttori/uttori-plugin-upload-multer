@@ -123,7 +123,7 @@ test('MulterUpload.bindRoutes(server, context): can bind routes', (t) => {
   t.true(post.calledOnce);
 });
 
-test('MulterUpload.upload(context): returns a Express route and can upload files and returns the filename', async (t) => {
+test('MulterUpload.upload(context): returns a Express route and can upload files and returns the file path', async (t) => {
   t.plan(2);
   const { serverSetup } = require('./_helpers/server');
   const route = '/upload';
@@ -139,5 +139,24 @@ test('MulterUpload.upload(context): returns a Express route and can upload files
   MulterUpload.bindRoutes(server, context);
   const response = await request(server).post(route).attach('file', 'test/_helpers/am-i-human.png');
   t.is(response.status, 200);
-  t.is(response.text.slice(0, 10), 'am-i-human');
+  t.is(response.text.slice(0, 20), '/uploads/am-i-human-');
+});
+
+test('MulterUpload.upload(context): returns a Express route and can upload nested files and returns the file path', async (t) => {
+  t.plan(2);
+  const { serverSetup } = require('./_helpers/server');
+  const route = '/upload';
+  const context = {
+    config: {
+      [MulterUpload.configKey]: {
+        directory: 'uploads',
+        route,
+      },
+    },
+  };
+  const server = serverSetup();
+  MulterUpload.bindRoutes(server, context);
+  const response = await request(server).post(route).field('fullPath', '/fake dir/nested/am-i-human.png').attach('file', 'test/_helpers/am-i-human.png');
+  t.is(response.status, 200);
+  t.is(response.text.slice(0, 36), '/uploads/fake dir/nested/am-i-human-');
 });

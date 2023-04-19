@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file. This projec
 ## [2.3.0](https://github.com/uttori/uttori-plugin-upload-multer/compare/v2.2.1...v2.3.0) - 2023-04-19
 
 - 🧰 Add support for custom route middleware through the configuration.
+- 🧰 Add support for nested file uploads and recursive directories.
+- 🛠 Clean up some types, add type for config.
+- 🛠 Fix some broken debug output.
+- 🛠 Optimize some file & path manipulation to use `path`
 - 🎁 Update dev dependencies
 
 ## [2.2.1](https://github.com/uttori/uttori-plugin-upload-multer/compare/v2.2.0...v2.2.1) - 2023-04-04
