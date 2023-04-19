@@ -42,6 +42,9 @@ class MulterUpload {
 
       // Server route to GET uploads from.
       publicRoute: '/uploads',
+
+      // Custom Middleware for the Upload route
+      middleware: [],
     };
   }
 
@@ -74,6 +77,11 @@ class MulterUpload {
     }
     if (typeof config[MulterUpload.configKey].publicRoute !== 'string') {
       const error = 'Config Error: `publicRoute` should be a string server route to where files should be GET from.';
+      debug(error);
+      throw new Error(error);
+    }
+    if (!Array.isArray(config[MulterUpload.configKey].middleware)) {
+      const error = 'Config Error: `middleware` should be an array of middleware.';
       debug(error);
       throw new Error(error);
     }
@@ -149,11 +157,11 @@ class MulterUpload {
    */
   static bindRoutes(server, context) {
     debug('bindRoutes');
-    const { directory, route, publicRoute } = { ...MulterUpload.defaultConfig(), ...context.config[MulterUpload.configKey] };
+    const { directory, route, publicRoute, middleware } = { ...MulterUpload.defaultConfig(), ...context.config[MulterUpload.configKey] };
     debug('bindRoutes route:', route);
     debug('bindRoutes directory:', directory);
     server.use(publicRoute, express.static(directory));
-    server.post(route, MulterUpload.upload(context));
+    server.post(route, ...middleware, MulterUpload.upload(context));
   }
 
   /**

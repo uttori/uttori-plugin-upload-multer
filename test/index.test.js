@@ -1,4 +1,3 @@
-// @ts-nocheck
 const test = require('ava');
 const sinon = require('sinon');
 const request = require('supertest');
@@ -82,6 +81,19 @@ test('MulterUpload.validateConfig(config, _context): throws when publicRoute is 
   }, { message: 'Config Error: `publicRoute` should be a string server route to where files should be GET from.' });
 });
 
+test('MulterUpload.validateConfig(config, _context): throws when middleware is not an array', (t) => {
+  t.throws(() => {
+    MulterUpload.validateConfig({
+      [MulterUpload.configKey]: {
+        directory: 'uploads',
+        route: '/upload',
+        publicRoute: '/uploads',
+        middleware: {},
+      },
+    });
+  }, { message: 'Config Error: `middleware` should be an array of middleware.' });
+});
+
 test('MulterUpload.validateConfig(config, _context): can validate', (t) => {
   t.notThrows(() => {
     MulterUpload.validateConfig({
@@ -89,6 +101,7 @@ test('MulterUpload.validateConfig(config, _context): can validate', (t) => {
         directory: 'uploads',
         route: '/upload',
         publicRoute: '/uploads',
+        middleware: [],
       },
     });
   });

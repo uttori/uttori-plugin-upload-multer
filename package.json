@@ -29,12 +29,12 @@
   },
   "devDependencies": {
     "ava": "^5.2.0",
-    "eslint": "^8.37.0",
+    "eslint": "^8.38.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-plugin-anti-trojan-source": "^1.1.1",
     "eslint-plugin-ava": "^14.0.0",
     "eslint-plugin-import": "^2.27.5",
-    "eslint-plugin-jsdoc": "^40.1.1",
+    "eslint-plugin-jsdoc": "^43.0.6",
     "eslint-plugin-jsx-a11y": "^6.7.1",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-optimize-regex": "^1.2.1",
@@ -50,7 +50,7 @@
     "release-it": "^15.10.1",
     "sinon": "^15.0.3",
     "supertest": "^6.3.3",
-    "typescript": "^5.0.3"
+    "typescript": "^5.0.4"
   },
   "files": [
     "esm/*",
