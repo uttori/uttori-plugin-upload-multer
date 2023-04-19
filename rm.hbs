@@ -38,6 +38,62 @@ npm install --save uttori-plugin-upload-multer
 }
 ```
 
+### Nested Uploads
+
+When supplised with a `fullPath` key, nested uploads will retain their paths on upload:
+
+```js
+  // File Uploads
+  try {
+    // https://docs.dropzone.dev/configuration/basics/configuration-options
+    Dropzone.options.fileupload = {
+      paramName: 'file',
+      withCredentials: true,
+      init: function init() {
+        // Allow dropping a folder to upload all files.
+        this.hiddenFileInput.setAttribute('webkitdirectory', true);
+      },
+    };
+
+    const dropzone = new Dropzone('.dropzone');
+
+    // Add more information to the file uploads.
+    dropzone.on('sending', (file, _xhr, formData) => {
+      formData.append('fullPath', file.fullPath || '');
+      formData.append('filesize', file.size || 0);
+      formData.append('lastModified', file.lastModified || Date.now());
+    });
+
+    // Read the upload path from the elements data-upload attribute and escape any text sent back from the server.
+    dropzone.on('success', (file, responseText) => {
+      // Create the correct type of Markdown link.
+      let linkToUploadedFile = `[${file.name}](${encodeURI(responseText)})`;
+      if (file.type.startsWith('image/')) {
+        linkToUploadedFile = `![${file.name}](${encodeURI(responseText)})`;
+      } else if (file.type.startsWith('video/')) {
+        linkToUploadedFile = `<video controls playsinline muted src="${responseText}"></video>`;
+      }
+
+      // Copy to clipboard.
+      navigator.clipboard.writeText(linkToUploadedFile).then(() => {
+        console.log('Async: Copying to clipboard was successful!');
+      }, (error) => {
+        console.error('Async: Could not copy text: ', error);
+      });
+
+      // Append to the content.
+      /** @type {HTMLTextAreaElement | null} */
+      const textarea = document.querySelector('textarea#editing');
+      if (textarea) {
+        textarea.value = `${textarea.value}\n${linkToUploadedFile}\n`;
+        textarea.dispatchEvent(new Event('input'));
+      }
+    });
+  } catch (error) {
+    console.error('Dropzone Error:', error);
+  }
+```
+
 * * *
 
 ## API Reference
