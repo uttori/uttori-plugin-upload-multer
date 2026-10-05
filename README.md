@@ -5,6 +5,10 @@
 ![dependency status](https://img.shields.io/librariesio/release/npm/@uttori/plugin-upload-multer)
 ![npm bundle size](https://img.shields.io/bundlephobia/minzip/@uttori/plugin-upload-multer?label=Minified%20%2B%20GZip)
 
+# Package Moved
+
+This has been added to the core https://github.com/uttori/uttori-wiki package.
+
 # Uttori Plugin - Multer Upload
 
 A plugin to add file uploading using Multer.
